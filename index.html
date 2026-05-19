@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#0a0a0f">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="manifest" href="manifest.json">
+<title>ReactionFit</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@400;600;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #0a0a0f;
+  --surface: #12121a;
+  --surface-2: #1a1a26;
+  --accent: #ff3d3d;
+  --accent-glow: rgba(255, 61, 61, 0.3);
+  --green: #00e676;
+  --green-glow: rgba(0, 230, 118, 0.3);
+  --text: #f0f0f5;
+  --text-dim: #8888a0;
+  --radius: 16px;
+}
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 600;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+body { display: flex; flex-direction: column; }
+
+/* ===== NAV ===== */
+.nav {
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+  padding: 12px 16px 8px;
+  background: var(--bg);
+  position: relative;
+  z-index: 100;
+}
+.nav-btn {
+  flex: 1;
+  max-width: 180px;
+  padding: 10px 0;
+  border: none;
+  background: var(--surface);
+  color: var(--text-dim);
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 18px;
+  letter-spacing: 2px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+.nav-btn.active {
+  background: var(--accent);
+  color: #fff;
+  box-shadow: 0 4px 20px var(--accent-glow);
+}
+
+/* ===== PAGES ===== */
+.page {
+  flex: 1;
+  display: none;
+  flex-direction: column;
+  overflow-y: auto;
+  padding: 16px;
+}
+.page.active { display: flex; }
+
+/* ===== TABATA ===== */
+.tabata-config {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-bottom: 16px;
+}
+.config-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding: 14px 18px;
+}
+.config-row label {
+  font-size: 15px;
+  color: var(--text-dim);
+  letter-spacing: 0.5px;
+}
+.config-row .value-control {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.config-row .value-control span {
+  font-family: 'Orbitron', monospace;
+  font-size: 20px;
+  font-weight: 700;
+  min-width: 44px;
+  text-align: center;
+}
+.btn-pm {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 2px solid var(--accent);
+  background: transparent;
+  color: var(--accent);
+  font-size: 22px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  font-family: 'Rajdhani', sans-serif;
+}
+.btn-pm:active { background: var(--accent); color: #fff; }
+
+.tabata-display {
+  flex: 1;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  text-align: center;
+}
+.tabata-display.active { display: flex; }
+.tabata-phase {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 42px;
+  letter-spacing: 6px;
+  text-transform: uppercase;
+}
+.tabata-phase.work { color: var(--accent); text-shadow: 0 0 30px var(--accent-glow); }
+.tabata-phase.rest { color: var(--green); text-shadow: 0 0 30px var(--green-glow); }
+.tabata-time {
+  font-family: 'Orbitron', monospace;
+  font-size: 100px;
+  font-weight: 900;
+  line-height: 1;
+}
+.tabata-round {
+  font-size: 18px;
+  color: var(--text-dim);
+  letter-spacing: 2px;
+}
+.tabata-progress {
+  width: 80%;
+  max-width: 300px;
+  height: 6px;
+  background: var(--surface-2);
+  border-radius: 3px;
+  margin-top: 12px;
+  overflow: hidden;
+}
+.tabata-progress-bar {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.3s linear;
+}
+
+/* ===== REACTION ===== */
+.reaction-config {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-bottom: 16px;
+}
+.color-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 8px 0;
+}
+.color-chip {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  border: 3px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+}
+.color-chip.selected { border-color: #fff; transform: scale(1.1); }
+.color-chip.selected::after {
+  content: '✓';
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  color: #fff;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+}
+
+.reaction-display {
+  display: none;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 24px;
+  transition: background-color 0.15s;
+  position: relative;
+  margin: -16px;
+  padding: 16px;
+}
+.reaction-display.active { display: flex; }
+
+.reaction-color-name {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 64px;
+  letter-spacing: 8px;
+  color: #fff;
+  text-shadow: 0 2px 20px rgba(0,0,0,0.5);
+  text-transform: uppercase;
+  animation: pulseIn 0.3s ease-out;
+}
+.reaction-countdown {
+  font-family: 'Orbitron', monospace;
+  font-size: 28px;
+  font-weight: 700;
+  color: rgba(255,255,255,0.8);
+  margin-top: 8px;
+}
+.reaction-stats {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  text-align: right;
+  color: rgba(255,255,255,0.7);
+  font-size: 14px;
+}
+.reaction-stats span { font-family: 'Orbitron', monospace; font-weight: 700; font-size: 18px; display: block; color: #fff; }
+
+.reaction-waiting {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 36px;
+  letter-spacing: 4px;
+  color: rgba(255,255,255,0.6);
+  animation: breathe 2s ease-in-out infinite;
+}
+
+/* ===== BUTTONS ===== */
+.btn-main {
+  width: 100%;
+  padding: 16px;
+  border: none;
+  border-radius: var(--radius);
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 22px;
+  letter-spacing: 3px;
+  cursor: pointer;
+  transition: all 0.25s;
+  margin-top: auto;
+}
+.btn-start {
+  background: var(--accent);
+  color: #fff;
+  box-shadow: 0 6px 24px var(--accent-glow);
+}
+.btn-start:active { transform: scale(0.97); }
+.btn-stop {
+  background: var(--surface-2);
+  color: var(--text-dim);
+  box-shadow: none;
+  margin-top: 10px;
+}
+
+.interval-config {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding: 14px 18px;
+}
+.interval-config label {
+  font-size: 14px;
+  color: var(--text-dim);
+  flex-shrink: 0;
+}
+.interval-config input[type=range] {
+  flex: 1;
+  accent-color: var(--accent);
+  height: 6px;
+}
+.interval-config .val {
+  font-family: 'Orbitron', monospace;
+  font-size: 16px;
+  font-weight: 700;
+  min-width: 36px;
+  text-align: right;
+}
+
+.section-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 16px;
+  letter-spacing: 3px;
+  color: var(--text-dim);
+  margin: 4px 0;
+}
+
+/* ===== FULLSCREEN FLASH ===== */
+.flash-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 12px;
+}
+.flash-overlay.active { display: flex; }
+
+/* ===== ANIMATIONS ===== */
+@keyframes pulseIn {
+  0% { transform: scale(0.7); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+@keyframes breathe {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
+}
+
+/* ===== SCROLLBAR ===== */
+.page::-webkit-scrollbar { width: 4px; }
+.page::-webkit-scrollbar-thumb { background: var(--surface-2); border-radius: 2px; }
+
+/* ===== AUDIO TOGGLE ===== */
+.sound-toggle {
+  position: absolute;
+  top: 24px;
+  left: 24px;
+  background: rgba(0,0,0,0.3);
+  border: 1px solid rgba(255,255,255,0.2);
+  color: #fff;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <button class="nav-btn active" onclick="switchPage('tabata')">TABATA</button>
+  <button class="nav-btn" onclick="switchPage('reaction')">REACCIÓN</button>
+</nav>
+
+<!-- ===== TABATA PAGE ===== -->
+<div class="page active" id="page-tabata">
+  <div class="tabata-config" id="tabata-config">
+    <div class="config-row">
+      <label>ROUNDS</label>
+      <div class="value-control">
+        <button class="btn-pm" onclick="adj('rounds',-1)">−</button>
+        <span id="v-rounds">8</span>
+        <button class="btn-pm" onclick="adj('rounds',1)">+</button>
+      </div>
+    </div>
+    <div class="config-row">
+      <label>WORK (seg)</label>
+      <div class="value-control">
+        <button class="btn-pm" onclick="adj('work',-5)">−</button>
+        <span id="v-work">20</span>
+        <button class="btn-pm" onclick="adj('work',5)">+</button>
+      </div>
+    </div>
+    <div class="config-row">
+      <label>REST (seg)</label>
+      <div class="value-control">
+        <button class="btn-pm" onclick="adj('rest',-5)">−</button>
+        <span id="v-rest">10</span>
+        <button class="btn-pm" onclick="adj('rest',5)">+</button>
+      </div>
+    </div>
+    <div class="config-row">
+      <label>PREPARE (seg)</label>
+      <div class="value-control">
+        <button class="btn-pm" onclick="adj('prepare',-1)">−</button>
+        <span id="v-prepare">5</span>
+        <button class="btn-pm" onclick="adj('prepare',1)">+</button>
+      </div>
+    </div>
+    <button class="btn-main btn-start" onclick="startTabata()">COMENZAR</button>
+  </div>
+
+  <div class="tabata-display" id="tabata-display">
+    <div class="tabata-phase" id="tabata-phase">PREPARAR</div>
+    <div class="tabata-time" id="tabata-time">5</div>
+    <div class="tabata-round" id="tabata-round">ROUND 1 / 8</div>
+    <div class="tabata-progress"><div class="tabata-progress-bar" id="tabata-bar"></div></div>
+    <button class="btn-main btn-stop" onclick="stopTabata()" style="margin-top:24px;width:auto;padding:12px 40px;">DETENER</button>
+  </div>
+</div>
+
+<!-- ===== REACTION PAGE ===== -->
+<div class="page" id="page-reaction">
+  <div class="reaction-config" id="reaction-config">
+    <div class="section-title">COLORES ACTIVOS</div>
+    <div class="color-grid" id="color-grid"></div>
+
+    <div class="interval-config">
+      <label>INTERVALO</label>
+      <input type="range" min="1" max="8" step="0.5" value="3" id="interval-range" oninput="updateIntervalLabel()">
+      <div class="val" id="interval-val">3s</div>
+    </div>
+
+    <div class="config-row">
+      <label>DURACIÓN (min)</label>
+      <div class="value-control">
+        <button class="btn-pm" onclick="adjReaction('duration',-1)">−</button>
+        <span id="v-duration">3</span>
+        <button class="btn-pm" onclick="adjReaction('duration',1)">+</button>
+      </div>
+    </div>
+
+    <button class="btn-main btn-start" onclick="startReaction()">COMENZAR</button>
+  </div>
+
+  <div class="reaction-display" id="reaction-display">
+    <button class="sound-toggle" id="sound-btn" onclick="toggleSound()">🔊</button>
+    <div class="reaction-stats">
+      <div>CAMBIOS<span id="r-changes">0</span></div>
+      <div style="margin-top:8px">TIEMPO<span id="r-time">3:00</span></div>
+    </div>
+    <div id="reaction-content"></div>
+    <button class="btn-main btn-stop" onclick="stopReaction()" style="position:absolute;bottom:24px;left:24px;right:24px;width:auto;">DETENER</button>
+  </div>
+</div>
+
+<!-- FULLSCREEN FLASH FOR TABATA PHASE CHANGE -->
+<div class="flash-overlay" id="flash-overlay"></div>
+
+<script>
+// ===== AUDIO =====
+const AudioCtx = window.AudioContext || window.webkitAudioContext;
+let audioCtx;
+let soundEnabled = true;
+
+function ensureAudio() {
+  if (!audioCtx) audioCtx = new AudioCtx();
+  if (audioCtx.state === 'suspended') audioCtx.resume();
+}
+
+function beep(freq, duration, type = 'sine') {
+  if (!soundEnabled) return;
+  ensureAudio();
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  osc.type = type;
+  osc.frequency.value = freq;
+  gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+  osc.connect(gain);
+  gain.connect(audioCtx.destination);
+  osc.start();
+  osc.stop(audioCtx.currentTime + duration);
+}
+
+function beepWork() { beep(880, 0.15); setTimeout(() => beep(880, 0.15), 180); }
+function beepRest() { beep(440, 0.3); }
+function beepTick() { beep(660, 0.08); }
+function beepDone() { beep(1200, 0.12); setTimeout(() => { beep(1400, 0.12); setTimeout(() => beep(1600, 0.3), 140); }, 140); }
+function beepColor() { beep(600, 0.1, 'square'); }
+
+function toggleSound() {
+  soundEnabled = !soundEnabled;
+  document.getElementById('sound-btn').textContent = soundEnabled ? '🔊' : '🔇';
+}
+
+// ===== NAVIGATION =====
+function switchPage(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-' + page).classList.add('active');
+  event.target.classList.add('active');
+}
+
+// ===== TABATA =====
+const tabataVals = { rounds: 8, work: 20, rest: 10, prepare: 5 };
+const tabataLimits = { rounds: [1, 30], work: [5, 120], rest: [5, 120], prepare: [3, 15] };
+let tabataInterval = null;
+
+function adj(key, delta) {
+  const [min, max] = tabataLimits[key];
+  tabataVals[key] = Math.max(min, Math.min(max, tabataVals[key] + delta));
+  document.getElementById('v-' + key).textContent = tabataVals[key];
+}
+
+function startTabata() {
+  ensureAudio();
+  const config = document.getElementById('tabata-config');
+  const display = document.getElementById('tabata-display');
+  config.style.display = 'none';
+  display.classList.add('active');
+
+  let phase = 'prepare';
+  let currentRound = 1;
+  let timeLeft = tabataVals.prepare;
+  const totalRounds = tabataVals.rounds;
+
+  updateTabataUI(phase, timeLeft, currentRound, totalRounds);
+
+  tabataInterval = setInterval(() => {
+    timeLeft--;
+
+    if (timeLeft <= 3 && timeLeft > 0) beepTick();
+
+    if (timeLeft <= 0) {
+      if (phase === 'prepare') {
+        phase = 'work';
+        timeLeft = tabataVals.work;
+        beepWork();
+        flashScreen(getComputedStyle(document.documentElement).getPropertyValue('--accent').trim());
+      } else if (phase === 'work') {
+        if (currentRound >= totalRounds) {
+          beepDone();
+          stopTabata();
+          return;
+        }
+        phase = 'rest';
+        timeLeft = tabataVals.rest;
+        beepRest();
+        flashScreen(getComputedStyle(document.documentElement).getPropertyValue('--green').trim());
+      } else {
+        currentRound++;
+        phase = 'work';
+        timeLeft = tabataVals.work;
+        beepWork();
+        flashScreen(getComputedStyle(document.documentElement).getPropertyValue('--accent').trim());
+      }
+    }
+
+    updateTabataUI(phase, timeLeft, currentRound, totalRounds);
+  }, 1000);
+}
+
+function updateTabataUI(phase, time, round, total) {
+  const phaseEl = document.getElementById('tabata-phase');
+  const timeEl = document.getElementById('tabata-time');
+  const roundEl = document.getElementById('tabata-round');
+  const bar = document.getElementById('tabata-bar');
+
+  const labels = { prepare: 'PREPARAR', work: 'WORK', rest: 'REST' };
+  phaseEl.textContent = labels[phase];
+  phaseEl.className = 'tabata-phase ' + phase;
+  timeEl.textContent = time;
+  timeEl.style.color = phase === 'work' ? 'var(--accent)' : phase === 'rest' ? 'var(--green)' : 'var(--text)';
+  roundEl.textContent = `ROUND ${round} / ${total}`;
+
+  const maxTime = phase === 'prepare' ? tabataVals.prepare : phase === 'work' ? tabataVals.work : tabataVals.rest;
+  const pct = ((maxTime - time) / maxTime) * 100;
+  bar.style.width = pct + '%';
+  bar.style.background = phase === 'work' ? 'var(--accent)' : phase === 'rest' ? 'var(--green)' : 'var(--text-dim)';
+}
+
+function stopTabata() {
+  clearInterval(tabataInterval);
+  tabataInterval = null;
+  document.getElementById('tabata-config').style.display = 'flex';
+  document.getElementById('tabata-display').classList.remove('active');
+}
+
+function flashScreen(color) {
+  const overlay = document.getElementById('flash-overlay');
+  overlay.style.background = color;
+  overlay.classList.add('active');
+  setTimeout(() => overlay.classList.remove('active'), 250);
+}
+
+// ===== REACTION =====
+const AVAILABLE_COLORS = [
+  { name: 'ROJO', hex: '#ff3d3d' },
+  { name: 'AZUL', hex: '#3d7eff' },
+  { name: 'VERDE', hex: '#00e676' },
+  { name: 'AMARILLO', hex: '#ffd600' },
+  { name: 'NARANJA', hex: '#ff9100' },
+  { name: 'VIOLETA', hex: '#b040ff' },
+  { name: 'CELESTE', hex: '#00e5ff' },
+  { name: 'ROSA', hex: '#ff4081' },
+  { name: 'BLANCO', hex: '#f0f0f5' },
+];
+
+let selectedColors = [0, 1, 2, 3]; // indices
+let reactionInterval = null;
+let reactionTimeout = null;
+let reactionDuration = 3; // minutes
+
+function buildColorGrid() {
+  const grid = document.getElementById('color-grid');
+  grid.innerHTML = '';
+  AVAILABLE_COLORS.forEach((c, i) => {
+    const chip = document.createElement('div');
+    chip.className = 'color-chip' + (selectedColors.includes(i) ? ' selected' : '');
+    chip.style.background = c.hex;
+    chip.onclick = () => toggleColor(i);
+    grid.appendChild(chip);
+  });
+}
+
+function toggleColor(index) {
+  if (selectedColors.includes(index)) {
+    if (selectedColors.length <= 2) return; // min 2
+    selectedColors = selectedColors.filter(i => i !== index);
+  } else {
+    selectedColors.push(index);
+  }
+  buildColorGrid();
+}
+
+function adjReaction(key, delta) {
+  if (key === 'duration') {
+    reactionDuration = Math.max(1, Math.min(30, reactionDuration + delta));
+    document.getElementById('v-duration').textContent = reactionDuration;
+  }
+}
+
+function updateIntervalLabel() {
+  const v = document.getElementById('interval-range').value;
+  document.getElementById('interval-val').textContent = v + 's';
+}
+
+function startReaction() {
+  ensureAudio();
+  if (selectedColors.length < 2) return;
+
+  document.getElementById('reaction-config').style.display = 'none';
+  const display = document.getElementById('reaction-display');
+  display.classList.add('active');
+
+  const interval = parseFloat(document.getElementById('interval-range').value) * 1000;
+  let totalTime = reactionDuration * 60;
+  let changes = 0;
+  let lastColorIndex = -1;
+
+  function showNextColor() {
+    let idx;
+    do { idx = selectedColors[Math.floor(Math.random() * selectedColors.length)]; }
+    while (idx === lastColorIndex && selectedColors.length > 1);
+    lastColorIndex = idx;
+
+    const color = AVAILABLE_COLORS[idx];
+    display.style.backgroundColor = color.hex;
+    document.getElementById('reaction-content').innerHTML =
+      `<div class="reaction-color-name" style="animation:pulseIn 0.3s ease-out">${color.name}</div>`;
+    changes++;
+    document.getElementById('r-changes').textContent = changes;
+    beepColor();
+  }
+
+  function updateTimer() {
+    totalTime--;
+    const m = Math.floor(totalTime / 60);
+    const s = String(totalTime % 60).padStart(2, '0');
+    document.getElementById('r-time').textContent = `${m}:${s}`;
+    if (totalTime <= 0) {
+      beepDone();
+      stopReaction();
+    }
+  }
+
+  // Start with waiting state
+  display.style.backgroundColor = '#1a1a26';
+  document.getElementById('reaction-content').innerHTML = '<div class="reaction-waiting">PREPARATE...</div>';
+  document.getElementById('r-changes').textContent = '0';
+  const m = Math.floor(totalTime / 60);
+  const s = String(totalTime % 60).padStart(2, '0');
+  document.getElementById('r-time').textContent = `${m}:${s}`;
+
+  reactionTimeout = setTimeout(() => {
+    showNextColor();
+    reactionInterval = setInterval(showNextColor, interval);
+  }, 2000);
+
+  // Timer countdown starts after prepare
+  setTimeout(() => {
+    reactionTimeout = setInterval(updateTimer, 1000);
+  }, 2000);
+}
+
+function stopReaction() {
+  clearInterval(reactionInterval);
+  clearTimeout(reactionTimeout);
+  clearInterval(reactionTimeout);
+  reactionInterval = null;
+  reactionTimeout = null;
+  document.getElementById('reaction-config').style.display = 'flex';
+  const display = document.getElementById('reaction-display');
+  display.classList.remove('active');
+  display.style.backgroundColor = '';
+}
+
+// ===== INIT =====
+buildColorGrid();
+
+// ===== SERVICE WORKER REGISTRATION =====
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js').catch(() => {});
+}
+
+// Keep screen awake
+let wakeLock = null;
+async function requestWakeLock() {
+  try {
+    if ('wakeLock' in navigator) {
+      wakeLock = await navigator.wakeLock.request('screen');
+    }
+  } catch (e) {}
+}
+requestWakeLock();
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible') requestWakeLock();
+});
+</script>
+</body>
+</html>
