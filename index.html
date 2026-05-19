@@ -25,9 +25,9 @@ body{display:flex;flex-direction:column}
 /* ===== SPLASH ===== */
 .splash{position:fixed;inset:0;z-index:999;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;transition:opacity .5s}
 .splash.hide{opacity:0;pointer-events:none}
-.splash-logo{font-family:'Orbitron',monospace;font-size:72px;font-weight:900;letter-spacing:8px;background:linear-gradient(135deg,var(--accent),var(--yellow),var(--green));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.splash-logo{font-family:'Orbitron',monospace;font-size:100px;font-weight:900;letter-spacing:8px;background:linear-gradient(135deg,var(--accent),var(--yellow),var(--green));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 .splash-sub{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:6px;color:var(--text-dim)}
-.splash-tagline{font-size:13px;color:var(--text-dim);margin-top:16px;letter-spacing:1px}
+.splash-tagline{font-size:17px;color:var(--text-dim);margin-top:16px;letter-spacing:1px}
 .splash-loader{width:120px;height:3px;background:var(--surface-2);border-radius:2px;margin-top:24px;overflow:hidden}
 .splash-loader-bar{height:100%;width:0%;background:linear-gradient(90deg,var(--accent),var(--yellow),var(--green));border-radius:2px;animation:splashLoad 1.8s ease-in-out forwards}
 @keyframes splashLoad{0%{width:0}100%{width:100%}}
@@ -43,12 +43,12 @@ body{display:flex;flex-direction:column}
 
 /* ===== COMMON ===== */
 .config-row{display:flex;align-items:center;justify-content:space-between;background:var(--surface);border-radius:var(--radius);padding:14px 18px}
-.config-row label{font-size:14px;color:var(--text-dim);letter-spacing:.5px}
+.config-row label{font-size:19px;color:var(--text-dim);letter-spacing:.5px}
 .config-row .vc{display:flex;align-items:center;gap:12px}
 .config-row .vc span{font-family:'Orbitron',monospace;font-size:20px;font-weight:700;min-width:44px;text-align:center}
 .btn-pm{width:36px;height:36px;border-radius:50%;border:2px solid var(--accent);background:transparent;color:var(--accent);font-size:22px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;font-family:'Rajdhani',sans-serif}
 .btn-pm:active{background:var(--accent);color:#fff}
-.section-title{font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:3px;color:var(--text-dim);margin:4px 0}
+.section-title{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:3px;color:var(--text-dim);margin:4px 0}
 .btn-main{width:100%;padding:16px;border:none;border-radius:var(--radius);font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:3px;cursor:pointer;transition:all .25s}
 .btn-start{background:var(--accent);color:#fff;box-shadow:0 6px 24px var(--accent-glow)}
 .btn-start:active{transform:scale(.97)}
@@ -57,8 +57,8 @@ body{display:flex;flex-direction:column}
 .tabata-config{display:flex;flex-direction:column;gap:10px;padding-bottom:16px}
 .exercise-names{display:flex;flex-direction:column;gap:6px;margin-top:4px}
 .exercise-name-row{display:flex;align-items:center;gap:8px;background:var(--surface);border-radius:12px;padding:10px 14px}
-.exercise-name-row span{font-size:13px;color:var(--text-dim);min-width:20px}
-.exercise-name-row input{flex:1;background:transparent;border:none;border-bottom:1px solid var(--surface-2);color:var(--text);font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:600;padding:4px 0;outline:none}
+.exercise-name-row span{font-size:18px;color:var(--text-dim);min-width:20px}
+.exercise-name-row input{flex:1;background:transparent;border:none;border-bottom:1px solid var(--surface-2);color:var(--text);font-family:'Rajdhani',sans-serif;font-size:25px;font-weight:600;padding:4px 0;outline:none}
 .exercise-name-row input:focus{border-color:var(--accent)}
 .exercise-name-row input::placeholder{color:var(--text-dim);opacity:.5}
 .presets-row{display:flex;gap:8px;overflow-x:auto;padding:4px 0;-webkit-overflow-scrolling:touch}
@@ -68,7 +68,7 @@ body{display:flex;flex-direction:column}
 .preset-chip.save{border-style:dashed;border-color:var(--green);color:var(--green)}
 .preset-chip .del{margin-left:6px;opacity:.5;font-size:11px}
 .sound-selector{display:flex;gap:8px;flex-wrap:wrap;padding:4px 0}
-.sound-chip{padding:8px 14px;border-radius:20px;border:1.5px solid var(--surface-2);background:var(--surface);color:var(--text-dim);font-size:13px;font-weight:700;cursor:pointer;transition:all .2s}
+.sound-chip{padding:8px 14px;border-radius:20px;border:1.5px solid var(--surface-2);background:var(--surface);color:var(--text-dim);font-size:18px;font-weight:700;cursor:pointer;transition:all .2s}
 .sound-chip.active{border-color:var(--accent);color:var(--accent);background:rgba(255,61,61,.08)}
 
 /* ===== TABATA DISPLAY - FULLSCREEN COLORED ===== */
@@ -82,11 +82,11 @@ body{display:flex;flex-direction:column}
 .circle-timer svg{transform:rotate(-90deg);width:100%;height:100%}
 .circle-timer .track{fill:none;stroke:rgba(255,255,255,.15);stroke-width:8}
 .circle-timer .progress{fill:none;stroke:rgba(255,255,255,.9);stroke-width:8;stroke-linecap:round;transition:stroke-dashoffset .3s linear}
-.circle-timer .time-text{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Orbitron',monospace;font-size:80px;font-weight:900;line-height:1;color:#fff;text-shadow:0 2px 16px rgba(0,0,0,.3)}
+.circle-timer .time-text{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Orbitron',monospace;font-size:150px;font-weight:900;line-height:1;color:#fff;text-shadow:0 2px 16px rgba(0,0,0,.3)}
 
-.tabata-info{font-size:16px;color:rgba(255,255,255,.7);letter-spacing:1px}
-.tabata-info strong{color:#fff;font-family:'Orbitron',monospace;font-size:15px}
-.tabata-elapsed{font-size:13px;color:rgba(255,255,255,.5);letter-spacing:1px;margin-top:2px}
+.tabata-info{font-size:25px;color:rgba(255,255,255,.7);letter-spacing:1px}
+.tabata-info strong{color:#fff;font-family:'Orbitron',monospace;font-size:25px}
+.tabata-elapsed{font-size:20px;color:rgba(255,255,255,.5);letter-spacing:1px;margin-top:2px}
 .tabata-controls{display:flex;gap:12px;margin-top:14px;width:85%;max-width:320px}
 .tabata-controls button{flex:1;padding:14px 0;border:none;border-radius:var(--radius);font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:3px;cursor:pointer;transition:all .2s}
 .btn-pause{background:rgba(255,255,255,.2);color:#fff;backdrop-filter:blur(4px)}
@@ -153,14 +153,14 @@ body{display:flex;flex-direction:column}
 
 /* ===== ABOUT PAGE ===== */
 .about-content{display:flex;flex-direction:column;gap:16px;padding-bottom:32px}
-.about-logo{font-family:'Orbitron',monospace;font-size:48px;font-weight:900;text-align:center;background:linear-gradient(135deg,var(--accent),var(--yellow),var(--green));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.about-logo{font-family:'Orbitron',monospace;font-size:80px;font-weight:900;text-align:center;background:linear-gradient(135deg,var(--accent),var(--yellow),var(--green));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 .about-subtitle{text-align:center;font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:4px;color:var(--text-dim)}
 .about-section{background:var(--surface);border-radius:var(--radius);padding:18px}
-.about-section h4{font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:2px;color:var(--accent);margin-bottom:8px}
-.about-section p,.about-section li{font-size:14px;color:var(--text-dim);line-height:1.6}
+.about-section h4{font-family:'Bebas Neue',sans-serif;font-size:23px;letter-spacing:2px;color:var(--accent);margin-bottom:8px}
+.about-section p,.about-section li{font-size:17px;color:var(--text-dim);line-height:1.6}
 .about-section ul{list-style:none;padding:0}
 .about-section li::before{content:'⚡';margin-right:8px}
-.about-footer{text-align:center;padding:16px 0;font-size:12px;color:var(--text-dim);letter-spacing:1px}
+.about-footer{text-align:center;padding:16px 0;font-size:15px;color:var(--text-dim);letter-spacing:1px}
 .about-footer strong{color:var(--text);font-family:'Orbitron',monospace;font-size:11px}
 
 @keyframes pulseIn{0%{transform:scale(.5);opacity:0}70%{transform:scale(1.1)}100%{transform:scale(1);opacity:1}}
@@ -175,7 +175,7 @@ body{display:flex;flex-direction:column}
 <!-- ===== SPLASH SCREEN ===== -->
 <div class="splash" id="splash">
   <div class="splash-logo">TRT</div>
-  <div class="splash-sub">TABATA · REACCIÓN · TRAINING</div>
+  <div class="splash-sub">TABATA · REACTION · TRAINING</div>
   <div class="splash-tagline">Entrenamiento de alta intensidad y reacción</div>
   <div class="splash-loader"><div class="splash-loader-bar"></div></div>
 </div>
@@ -203,7 +203,7 @@ body{display:flex;flex-direction:column}
     <div class="exercise-names" id="exercise-names"></div>
     <div class="section-title">🔊 SONIDO</div>
     <div class="sound-selector" id="sound-selector"></div>
-    <div class="tabata-elapsed" id="tabata-total-time" style="text-align:center;padding:8px 0;font-size:15px;color:var(--text-dim)"></div>
+    <div class="tabata-elapsed" id="tabata-total-time" style="text-align:center;padding:8px 0;font-size:50px;color:var(--text-dim)"></div>
     <button class="btn-main btn-start" onclick="startTabataCountdown()">COMENZAR</button>
   </div>
 
@@ -254,7 +254,7 @@ body{display:flex;flex-direction:column}
 <div class="page" id="page-about">
   <div class="about-content">
     <div class="about-logo">TRT</div>
-    <div class="about-subtitle">TABATA · REACCIÓN · TRAINING</div>
+    <div class="about-subtitle">TABATA · REACTION · TRAINING</div>
 
     <div class="about-section">
       <h4>⚡ TABATA TIMER</h4>
@@ -302,7 +302,7 @@ body{display:flex;flex-direction:column}
     </div>
 
     <div class="about-footer">
-      <div>Versión 1.0.0</div>
+      <div>Versión 4.1.0</div>
       <div style="margin-top:6px">© 2026 <strong>TINCHOST</strong>. Todos los derechos reservados.</div>
     </div>
   </div>
