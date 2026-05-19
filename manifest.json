@@ -1,12 +1,25 @@
-{
+ {
   "name": "ReactionFit - Tabata & Reaction Training",
   "short_name": "ReactionFit",
   "description": "Tabata timer y entrenamiento de reacción con conos de colores",
-  "start_url": "/index.html",
+
+  "start_url": "./",
+  "scope": "./",
+
   "display": "standalone",
+
+  "display_override": [
+    "window-controls-overlay",
+    "standalone"
+  ],
+
   "orientation": "portrait",
+
   "background_color": "#0a0a0f",
   "theme_color": "#0a0a0f",
+
+  "lang": "es",
+
   "icons": [
     {
       "src": "icon-192.png",
@@ -20,5 +33,21 @@
       "type": "image/png",
       "purpose": "any maskable"
     }
-  ]
+  ],
+
+  "shortcuts": [
+    {
+      "name": "Iniciar Tabata",
+      "short_name": "Tabata",
+      "url": "./"
+    }
+  ],
+  "screenshots": [
+  {
+    "src": "screenshots/home.png",
+    "sizes": "1080x1920",
+    "type": "image/png",
+    "form_factor": "narrow"
+  }
+]
 }
