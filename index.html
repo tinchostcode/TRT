@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="manifest" href="manifest.json">
-<title>ReactionFit</title>
+<title>TRT - Tabata Reaction Training</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@400;600;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
 <style>
@@ -22,16 +22,26 @@
 html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:'Rajdhani',sans-serif;font-weight:600;-webkit-tap-highlight-color:transparent;user-select:none}
 body{display:flex;flex-direction:column}
 
-/* NAV */
-.nav{display:flex;justify-content:center;gap:4px;padding:12px 16px 8px;background:var(--bg);position:relative;z-index:100}
-.nav-btn{flex:1;max-width:180px;padding:10px 0;border:none;background:var(--surface);color:var(--text-dim);font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:2px;border-radius:12px;cursor:pointer;transition:all .3s}
+/* ===== SPLASH ===== */
+.splash{position:fixed;inset:0;z-index:999;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;transition:opacity .5s}
+.splash.hide{opacity:0;pointer-events:none}
+.splash-logo{font-family:'Orbitron',monospace;font-size:72px;font-weight:900;letter-spacing:8px;background:linear-gradient(135deg,var(--accent),var(--yellow),var(--green));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.splash-sub{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:6px;color:var(--text-dim)}
+.splash-tagline{font-size:13px;color:var(--text-dim);margin-top:16px;letter-spacing:1px}
+.splash-loader{width:120px;height:3px;background:var(--surface-2);border-radius:2px;margin-top:24px;overflow:hidden}
+.splash-loader-bar{height:100%;width:0%;background:linear-gradient(90deg,var(--accent),var(--yellow),var(--green));border-radius:2px;animation:splashLoad 1.8s ease-in-out forwards}
+@keyframes splashLoad{0%{width:0}100%{width:100%}}
+
+/* ===== NAV ===== */
+.nav{display:flex;justify-content:center;gap:4px;padding:10px 12px 6px;background:var(--bg);position:relative;z-index:100}
+.nav-btn{flex:1;max-width:140px;padding:9px 0;border:none;background:var(--surface);color:var(--text-dim);font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:2px;border-radius:12px;cursor:pointer;transition:all .3s}
 .nav-btn.active{background:var(--accent);color:#fff;box-shadow:0 4px 20px var(--accent-glow)}
 
-/* PAGES */
+/* ===== PAGES ===== */
 .page{flex:1;display:none;flex-direction:column;overflow-y:auto;padding:16px}
 .page.active{display:flex}
 
-/* COMMON */
+/* ===== COMMON ===== */
 .config-row{display:flex;align-items:center;justify-content:space-between;background:var(--surface);border-radius:var(--radius);padding:14px 18px}
 .config-row label{font-size:14px;color:var(--text-dim);letter-spacing:.5px}
 .config-row .vc{display:flex;align-items:center;gap:12px}
@@ -42,59 +52,48 @@ body{display:flex;flex-direction:column}
 .btn-main{width:100%;padding:16px;border:none;border-radius:var(--radius);font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:3px;cursor:pointer;transition:all .25s}
 .btn-start{background:var(--accent);color:#fff;box-shadow:0 6px 24px var(--accent-glow)}
 .btn-start:active{transform:scale(.97)}
-.btn-secondary{background:var(--surface);color:var(--text-dim);margin-top:8px}
 
-/* TABATA CONFIG */
+/* ===== TABATA CONFIG ===== */
 .tabata-config{display:flex;flex-direction:column;gap:10px;padding-bottom:16px}
-
-/* EXERCISE NAMES */
 .exercise-names{display:flex;flex-direction:column;gap:6px;margin-top:4px}
 .exercise-name-row{display:flex;align-items:center;gap:8px;background:var(--surface);border-radius:12px;padding:10px 14px}
 .exercise-name-row span{font-size:13px;color:var(--text-dim);min-width:20px}
 .exercise-name-row input{flex:1;background:transparent;border:none;border-bottom:1px solid var(--surface-2);color:var(--text);font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:600;padding:4px 0;outline:none}
 .exercise-name-row input:focus{border-color:var(--accent)}
 .exercise-name-row input::placeholder{color:var(--text-dim);opacity:.5}
-
-/* PRESETS */
 .presets-row{display:flex;gap:8px;overflow-x:auto;padding:4px 0;-webkit-overflow-scrolling:touch}
 .presets-row::-webkit-scrollbar{display:none}
 .preset-chip{flex-shrink:0;padding:8px 16px;border-radius:20px;border:1.5px solid var(--surface-2);background:var(--surface);color:var(--text-dim);font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:700;letter-spacing:1px;cursor:pointer;transition:all .2s;white-space:nowrap}
 .preset-chip.active{border-color:var(--accent);color:var(--accent);background:rgba(255,61,61,.08)}
 .preset-chip.save{border-style:dashed;border-color:var(--green);color:var(--green)}
 .preset-chip .del{margin-left:6px;opacity:.5;font-size:11px}
-.preset-chip .del:hover{opacity:1}
-
-/* SOUND SELECTOR */
 .sound-selector{display:flex;gap:8px;flex-wrap:wrap;padding:4px 0}
 .sound-chip{padding:8px 14px;border-radius:20px;border:1.5px solid var(--surface-2);background:var(--surface);color:var(--text-dim);font-size:13px;font-weight:700;cursor:pointer;transition:all .2s}
 .sound-chip.active{border-color:var(--accent);color:var(--accent);background:rgba(255,61,61,.08)}
 
-/* TABATA DISPLAY */
-.tabata-display{flex:1;display:none;flex-direction:column;align-items:center;justify-content:center;gap:4px;text-align:center;position:relative;transition:background-color .4s}
+/* ===== TABATA DISPLAY - FULLSCREEN COLORED ===== */
+.tabata-display{position:fixed;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;gap:2px;text-align:center;z-index:90;transition:background-color .35s}
 .tabata-display.active{display:flex}
-.tabata-phase{font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:6px;text-transform:uppercase;transition:all .3s}
-.tabata-phase.trabajo{color:var(--accent);text-shadow:0 0 30px var(--accent-glow)}
-.tabata-phase.descanso{color:var(--green);text-shadow:0 0 30px var(--green-glow)}
-.tabata-phase.preparacion{color:var(--yellow);text-shadow:0 0 30px var(--yellow-glow)}
-.tabata-exercise-name{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:4px;color:rgba(255,255,255,.7);margin-top:2px;min-height:32px}
+.tabata-phase{font-family:'Bebas Neue',sans-serif;font-size:52px;letter-spacing:8px;text-transform:uppercase;color:#fff;text-shadow:0 2px 20px rgba(0,0,0,.3);transition:all .3s}
+.tabata-exercise-name{font-family:'Bebas Neue',sans-serif;font-size:30px;letter-spacing:4px;color:rgba(255,255,255,.85);min-height:36px}
 
-/* CIRCULAR TIMER */
-.circle-timer{position:relative;width:220px;height:220px;margin:8px 0}
+/* CIRCULAR TIMER - 2x bigger */
+.circle-timer{position:relative;width:280px;height:280px;margin:4px 0}
 .circle-timer svg{transform:rotate(-90deg);width:100%;height:100%}
-.circle-timer .track{fill:none;stroke:var(--surface-2);stroke-width:8}
-.circle-timer .progress{fill:none;stroke-width:8;stroke-linecap:round;transition:stroke-dashoffset .3s linear,stroke .3s}
-.circle-timer .time-text{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Orbitron',monospace;font-size:64px;font-weight:900;line-height:1}
+.circle-timer .track{fill:none;stroke:rgba(255,255,255,.15);stroke-width:8}
+.circle-timer .progress{fill:none;stroke:rgba(255,255,255,.9);stroke-width:8;stroke-linecap:round;transition:stroke-dashoffset .3s linear}
+.circle-timer .time-text{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Orbitron',monospace;font-size:80px;font-weight:900;line-height:1;color:#fff;text-shadow:0 2px 16px rgba(0,0,0,.3)}
 
-.tabata-info{font-size:15px;color:var(--text-dim);letter-spacing:1px}
-.tabata-info strong{color:var(--text);font-family:'Orbitron',monospace;font-size:14px}
-.tabata-elapsed{font-size:12px;color:var(--text-dim);letter-spacing:1px;margin-top:4px}
-.tabata-controls{display:flex;gap:12px;margin-top:16px;width:85%;max-width:320px}
+.tabata-info{font-size:16px;color:rgba(255,255,255,.7);letter-spacing:1px}
+.tabata-info strong{color:#fff;font-family:'Orbitron',monospace;font-size:15px}
+.tabata-elapsed{font-size:13px;color:rgba(255,255,255,.5);letter-spacing:1px;margin-top:2px}
+.tabata-controls{display:flex;gap:12px;margin-top:14px;width:85%;max-width:320px}
 .tabata-controls button{flex:1;padding:14px 0;border:none;border-radius:var(--radius);font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:3px;cursor:pointer;transition:all .2s}
-.btn-pause{background:var(--yellow);color:#0a0a0f}
-.btn-pause.paused{background:var(--green);color:#fff;box-shadow:0 4px 16px var(--green-glow)}
-.btn-cancel{background:var(--surface-2);color:var(--text-dim)}
+.btn-pause{background:rgba(255,255,255,.2);color:#fff;backdrop-filter:blur(4px)}
+.btn-pause.paused{background:rgba(255,255,255,.35);color:#fff}
+.btn-cancel{background:rgba(0,0,0,.3);color:rgba(255,255,255,.6)}
 
-/* REACTION CONFIG */
+/* ===== REACTION ===== */
 .reaction-config{display:flex;flex-direction:column;gap:12px;padding-bottom:16px}
 .color-grid{display:flex;flex-wrap:wrap;gap:10px;padding:8px 0}
 .color-chip{width:48px;height:48px;border-radius:12px;border:3px solid transparent;cursor:pointer;transition:all .2s;position:relative}
@@ -111,7 +110,6 @@ body{display:flex;flex-direction:column}
 .toggle-switch::after{content:'';position:absolute;top:3px;left:3px;width:22px;height:22px;background:#fff;border-radius:50%;transition:transform .3s}
 .toggle-switch.on::after{transform:translateX(22px)}
 
-/* REACTION DISPLAY */
 .reaction-display{display:none;flex:1;flex-direction:column;align-items:center;justify-content:center;transition:background-color .15s;position:relative;margin:-16px;padding:16px}
 .reaction-display.active{display:flex}
 .reaction-color-name{font-family:'Bebas Neue',sans-serif;font-size:72px;letter-spacing:8px;color:#fff;text-shadow:0 2px 20px rgba(0,0,0,.5);text-transform:uppercase;animation:pulseIn .3s ease-out}
@@ -121,7 +119,7 @@ body{display:flex;flex-direction:column}
 .reaction-controls{position:absolute;bottom:24px;left:24px;right:24px;display:flex;gap:12px}
 .reaction-controls button{flex:1;padding:14px 0;border:none;border-radius:var(--radius);font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:3px;cursor:pointer}
 
-/* SUMMARY */
+/* ===== SUMMARY ===== */
 .summary-overlay{position:fixed;inset:0;background:rgba(10,10,15,.95);z-index:200;display:none;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:32px;text-align:center}
 .summary-overlay.active{display:flex}
 .summary-title{font-family:'Bebas Neue',sans-serif;font-size:42px;letter-spacing:6px;color:var(--green);text-shadow:0 0 20px var(--green-glow)}
@@ -131,9 +129,9 @@ body{display:flex;flex-direction:column}
 .summary-stat span{font-family:'Orbitron',monospace;font-size:20px;font-weight:700}
 .btn-close-summary{margin-top:12px;padding:14px 48px;border:none;border-radius:var(--radius);background:var(--accent);color:#fff;font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:3px;cursor:pointer}
 
-/* OVERLAYS */
-.flash-overlay{position:fixed;inset:0;z-index:150;display:none;pointer-events:none;opacity:0;transition:opacity .15s}
-.flash-overlay.active{display:block;opacity:.6;animation:flashAnim .35s ease-out forwards}
+/* ===== OVERLAYS ===== */
+.flash-overlay{position:fixed;inset:0;z-index:150;display:none;pointer-events:none;opacity:0}
+.flash-overlay.active{display:block;animation:flashAnim .35s ease-out forwards}
 .countdown-overlay{position:fixed;inset:0;z-index:180;display:none;align-items:center;justify-content:center;background:rgba(10,10,15,.92)}
 .countdown-overlay.active{display:flex}
 .countdown-number{font-family:'Orbitron',monospace;font-size:140px;font-weight:900;color:var(--accent);text-shadow:0 0 60px var(--accent-glow);animation:pulseIn .5s ease-out}
@@ -142,36 +140,58 @@ body{display:flex;flex-direction:column}
 .icon-btn{background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.2);color:#fff;width:40px;height:40px;border-radius:50%;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center}
 .icon-btn.off{opacity:.4}
 
-/* SAVE PRESET MODAL */
+/* ===== MODAL ===== */
 .modal-overlay{position:fixed;inset:0;background:rgba(10,10,15,.9);z-index:210;display:none;align-items:center;justify-content:center;padding:24px}
 .modal-overlay.active{display:flex}
-.modal-box{background:var(--surface);border-radius:var(--radius);padding:24px;width:100%;max-width:320px;display:flex;flex-direction:column;gap:14px}
+.modal-box{background:var(--surface);border-radius:var(--radius);padding:24px;width:100%;max-width:340px;display:flex;flex-direction:column;gap:14px}
 .modal-box h3{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:3px;color:var(--text)}
+.modal-box p{font-size:14px;color:var(--text-dim);line-height:1.5}
 .modal-box input{background:var(--surface-2);border:1px solid var(--surface-2);border-radius:12px;padding:12px 16px;color:var(--text);font-family:'Rajdhani',sans-serif;font-size:16px;font-weight:600;outline:none}
 .modal-box input:focus{border-color:var(--accent)}
 .modal-actions{display:flex;gap:10px}
 .modal-actions button{flex:1;padding:12px;border:none;border-radius:12px;font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:2px;cursor:pointer}
 
+/* ===== ABOUT PAGE ===== */
+.about-content{display:flex;flex-direction:column;gap:16px;padding-bottom:32px}
+.about-logo{font-family:'Orbitron',monospace;font-size:48px;font-weight:900;text-align:center;background:linear-gradient(135deg,var(--accent),var(--yellow),var(--green));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.about-subtitle{text-align:center;font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:4px;color:var(--text-dim)}
+.about-section{background:var(--surface);border-radius:var(--radius);padding:18px}
+.about-section h4{font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:2px;color:var(--accent);margin-bottom:8px}
+.about-section p,.about-section li{font-size:14px;color:var(--text-dim);line-height:1.6}
+.about-section ul{list-style:none;padding:0}
+.about-section li::before{content:'⚡';margin-right:8px}
+.about-footer{text-align:center;padding:16px 0;font-size:12px;color:var(--text-dim);letter-spacing:1px}
+.about-footer strong{color:var(--text);font-family:'Orbitron',monospace;font-size:11px}
+
 @keyframes pulseIn{0%{transform:scale(.5);opacity:0}70%{transform:scale(1.1)}100%{transform:scale(1);opacity:1}}
 @keyframes breathe{0%,100%{opacity:.4}50%{opacity:1}}
-@keyframes flashAnim{0%{opacity:.8}100%{opacity:0}}
+@keyframes flashAnim{0%{opacity:.7}100%{opacity:0}}
 .page::-webkit-scrollbar{width:4px}
 .page::-webkit-scrollbar-thumb{background:var(--surface-2);border-radius:2px}
 </style>
 </head>
 <body>
 
-<nav class="nav">
+<!-- ===== SPLASH SCREEN ===== -->
+<div class="splash" id="splash">
+  <div class="splash-logo">TRT</div>
+  <div class="splash-sub">TABATA · REACCIÓN · TRAINING</div>
+  <div class="splash-tagline">Entrenamiento de alta intensidad y reacción</div>
+  <div class="splash-loader"><div class="splash-loader-bar"></div></div>
+</div>
+
+<!-- ===== NAV ===== -->
+<nav class="nav" id="main-nav" style="display:none">
   <button class="nav-btn active" onclick="switchPage('tabata',this)">TABATA</button>
   <button class="nav-btn" onclick="switchPage('reaction',this)">REACCIÓN</button>
+  <button class="nav-btn" onclick="switchPage('about',this)">ACERCA DE</button>
 </nav>
 
-<!-- TABATA PAGE -->
-<div class="page active" id="page-tabata">
+<!-- ===== TABATA PAGE ===== -->
+<div class="page active" id="page-tabata" style="display:none">
   <div class="tabata-config" id="tabata-config">
     <div class="section-title">💾 PRESETS</div>
     <div class="presets-row" id="presets-row"></div>
-
     <div class="section-title">⏱ CONFIGURACIÓN</div>
     <div class="config-row"><label>EJERCICIOS</label><div class="vc"><button class="btn-pm" onclick="adj('exercises',-1)">−</button><span id="v-exercises">4</span><button class="btn-pm" onclick="adj('exercises',1)">+</button></div></div>
     <div class="config-row"><label>SERIES</label><div class="vc"><button class="btn-pm" onclick="adj('series',-1)">−</button><span id="v-series">2</span><button class="btn-pm" onclick="adj('series',1)">+</button></div></div>
@@ -179,24 +199,22 @@ body{display:flex;flex-direction:column}
     <div class="config-row"><label>DESCANSO (seg)</label><div class="vc"><button class="btn-pm" onclick="adj('rest',-5)">−</button><span id="v-rest">10</span><button class="btn-pm" onclick="adj('rest',5)">+</button></div></div>
     <div class="config-row"><label>DESC. ENTRE SERIES (seg)</label><div class="vc"><button class="btn-pm" onclick="adj('seriesRest',-5)">−</button><span id="v-seriesRest">60</span><button class="btn-pm" onclick="adj('seriesRest',5)">+</button></div></div>
     <div class="config-row"><label>PREPARACIÓN (seg)</label><div class="vc"><button class="btn-pm" onclick="adj('prepare',-1)">−</button><span id="v-prepare">5</span><button class="btn-pm" onclick="adj('prepare',1)">+</button></div></div>
-
-    <div class="section-title">🏋️ NOMBRES DE EJERCICIOS (opcional)</div>
+    <div class="section-title">🏋️ NOMBRES (opcional)</div>
     <div class="exercise-names" id="exercise-names"></div>
-
     <div class="section-title">🔊 SONIDO</div>
     <div class="sound-selector" id="sound-selector"></div>
-
     <div class="tabata-elapsed" id="tabata-total-time" style="text-align:center;padding:8px 0;font-size:15px;color:var(--text-dim)"></div>
     <button class="btn-main btn-start" onclick="startTabataCountdown()">COMENZAR</button>
   </div>
 
+  <!-- TABATA RUNNING - FULLSCREEN COLORED -->
   <div class="tabata-display" id="tabata-display">
     <div class="tabata-phase" id="tabata-phase">PREPARACIÓN</div>
     <div class="tabata-exercise-name" id="tabata-ex-name"></div>
-    <div class="circle-timer" id="circle-timer">
-      <svg viewBox="0 0 220 220">
-        <circle class="track" cx="110" cy="110" r="100"/>
-        <circle class="progress" id="timer-progress" cx="110" cy="110" r="100" stroke-dasharray="628.32" stroke-dashoffset="0"/>
+    <div class="circle-timer">
+      <svg viewBox="0 0 280 280">
+        <circle class="track" cx="140" cy="140" r="126"/>
+        <circle class="progress" id="timer-progress" cx="140" cy="140" r="126" stroke-dasharray="791.68" stroke-dashoffset="0"/>
       </svg>
       <div class="time-text" id="tabata-time">5</div>
     </div>
@@ -209,7 +227,7 @@ body{display:flex;flex-direction:column}
   </div>
 </div>
 
-<!-- REACTION PAGE -->
+<!-- ===== REACTION PAGE ===== -->
 <div class="page" id="page-reaction">
   <div class="reaction-config" id="reaction-config">
     <div class="section-title">🎨 COLORES ACTIVOS (mín. 2)</div>
@@ -232,7 +250,65 @@ body{display:flex;flex-direction:column}
   </div>
 </div>
 
-<!-- OVERLAYS -->
+<!-- ===== ABOUT PAGE ===== -->
+<div class="page" id="page-about">
+  <div class="about-content">
+    <div class="about-logo">TRT</div>
+    <div class="about-subtitle">TABATA · REACCIÓN · TRAINING</div>
+
+    <div class="about-section">
+      <h4>⚡ TABATA TIMER</h4>
+      <ul>
+        <li>Ejercicios y series configurables</li>
+        <li>Nombres personalizados por ejercicio</li>
+        <li>Descanso entre series independiente</li>
+        <li>Timer circular con fondo de color por fase</li>
+        <li>Presets guardables (Tabata clásico, HIIT, EMOM)</li>
+        <li>4 packs de sonido: Beep, Silbato, Campana, Bocina</li>
+        <li>Pausa/reanudar en todo momento</li>
+        <li>Cuenta regresiva 3-2-1</li>
+        <li>Resumen al finalizar</li>
+      </ul>
+    </div>
+
+    <div class="about-section">
+      <h4>🎨 ENTRENAMIENTO DE REACCIÓN</h4>
+      <ul>
+        <li>9 colores configurables para conos físicos</li>
+        <li>Voz en español que dice el color</li>
+        <li>Vibración al cambio de color</li>
+        <li>Intervalo fijo o aleatorio</li>
+        <li>Duración configurable hasta 30 minutos</li>
+        <li>Pausa/reanudar</li>
+        <li>Estadísticas al finalizar</li>
+      </ul>
+    </div>
+
+    <div class="about-section">
+      <h4>📱 CARACTERÍSTICAS GENERALES</h4>
+      <ul>
+        <li>PWA — instalable como app nativa</li>
+        <li>Funciona offline</li>
+        <li>Pantalla siempre encendida (Wake Lock)</li>
+        <li>Sin publicidad, sin registro</li>
+        <li>Sonidos generados con Web Audio API</li>
+      </ul>
+    </div>
+
+    <div class="about-section">
+      <h4>📄 LEGAL</h4>
+      <p>TRT - Tabata Reaction Training es una aplicación de entrenamiento. Consultá a un profesional de la salud antes de comenzar cualquier programa de ejercicio físico.</p>
+      <p style="margin-top:8px">La aplicación no recopila ni almacena datos personales. Los presets se guardan localmente en tu dispositivo.</p>
+    </div>
+
+    <div class="about-footer">
+      <div>Versión 1.0.0</div>
+      <div style="margin-top:6px">© 2026 <strong>TINCHOST</strong>. Todos los derechos reservados.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== OVERLAYS ===== -->
 <div class="flash-overlay" id="flash-overlay"></div>
 <div class="countdown-overlay" id="countdown-overlay"><div class="countdown-number" id="countdown-number">3</div></div>
 <div class="summary-overlay" id="summary-overlay">
@@ -240,8 +316,6 @@ body{display:flex;flex-direction:column}
   <div class="summary-stats" id="summary-stats"></div>
   <button class="btn-close-summary" onclick="closeSummary()">CERRAR</button>
 </div>
-
-<!-- SAVE PRESET MODAL -->
 <div class="modal-overlay" id="modal-preset">
   <div class="modal-box">
     <h3>GUARDAR PRESET</h3>
@@ -254,86 +328,34 @@ body{display:flex;flex-direction:column}
 </div>
 
 <script>
+// ===== SPLASH =====
+setTimeout(()=>{
+  document.getElementById('splash').classList.add('hide');
+  document.getElementById('main-nav').style.display='flex';
+  document.getElementById('page-tabata').style.display='';
+  document.getElementById('page-tabata').classList.add('active');
+},2200);
+
 // ===== AUDIO ENGINE =====
-const AudioCtx=window.AudioContext||window.webkitAudioContext;
-let audioCtx;
+const AudioCtx=window.AudioContext||window.webkitAudioContext;let audioCtx;
 function ensureAudio(){if(!audioCtx)audioCtx=new AudioCtx();if(audioCtx.state==='suspended')audioCtx.resume()}
 
 const SOUND_PACKS={
-  beep:{
-    name:'Beep',
-    work:()=>{tone(880,.15);setTimeout(()=>tone(880,.15),180)},
-    rest:()=>tone(440,.3),
-    tick:()=>tone(660,.08),
-    done:()=>{tone(1200,.12);setTimeout(()=>{tone(1400,.12);setTimeout(()=>tone(1600,.3),140)},140)},
-    countdown:()=>tone(700,.12),
-    color:()=>tone(600,.1,'square'),
-  },
-  silbato:{
-    name:'Silbato',
-    work:()=>whistle(1200,1800,.35),
-    rest:()=>whistle(800,600,.25),
-    tick:()=>tone(660,.08),
-    done:()=>{whistle(1200,1800,.2);setTimeout(()=>whistle(1200,1800,.2),300);setTimeout(()=>whistle(1200,1800,.4),600)},
-    countdown:()=>tone(700,.12),
-    color:()=>whistle(900,1200,.12),
-  },
-  campana:{
-    name:'Campana',
-    work:()=>bell(800,.5),
-    rest:()=>bell(500,.4),
-    tick:()=>tone(660,.08),
-    done:()=>{bell(800,.3);setTimeout(()=>bell(1000,.3),250);setTimeout(()=>bell(1200,.5),500)},
-    countdown:()=>bell(600,.15),
-    color:()=>bell(700,.15),
-  },
-  bocina:{
-    name:'Bocina',
-    work:()=>horn(200,.4),
-    rest:()=>horn(150,.3),
-    tick:()=>tone(660,.08),
-    done:()=>{horn(200,.2);setTimeout(()=>horn(250,.2),250);setTimeout(()=>horn(300,.4),500)},
-    countdown:()=>horn(180,.12),
-    color:()=>horn(250,.1),
-  }
+  beep:{name:'Beep',work:()=>{tone(880,.15);setTimeout(()=>tone(880,.15),180)},rest:()=>tone(440,.3),tick:()=>tone(660,.08),done:()=>{tone(1200,.12);setTimeout(()=>{tone(1400,.12);setTimeout(()=>tone(1600,.3),140)},140)},countdown:()=>tone(700,.12),color:()=>tone(600,.1,'square')},
+  silbato:{name:'Silbato',work:()=>whistle(1200,1800,.35),rest:()=>whistle(800,600,.25),tick:()=>tone(660,.08),done:()=>{whistle(1200,1800,.2);setTimeout(()=>whistle(1200,1800,.2),300);setTimeout(()=>whistle(1200,1800,.4),600)},countdown:()=>tone(700,.12),color:()=>whistle(900,1200,.12)},
+  campana:{name:'Campana',work:()=>bell(800,.5),rest:()=>bell(500,.4),tick:()=>tone(660,.08),done:()=>{bell(800,.3);setTimeout(()=>bell(1000,.3),250);setTimeout(()=>bell(1200,.5),500)},countdown:()=>bell(600,.15),color:()=>bell(700,.15)},
+  bocina:{name:'Bocina',work:()=>horn(200,.4),rest:()=>horn(150,.3),tick:()=>tone(660,.08),done:()=>{horn(200,.2);setTimeout(()=>horn(250,.2),250);setTimeout(()=>horn(300,.4),500)},countdown:()=>horn(180,.12),color:()=>horn(250,.1)}
 };
 let currentPack='beep';
-
-function tone(f,d,type='sine'){
-  ensureAudio();const o=audioCtx.createOscillator(),g=audioCtx.createGain();
-  o.type=type;o.frequency.value=f;g.gain.setValueAtTime(.3,audioCtx.currentTime);
-  g.gain.exponentialRampToValueAtTime(.001,audioCtx.currentTime+d);
-  o.connect(g);g.connect(audioCtx.destination);o.start();o.stop(audioCtx.currentTime+d);
-}
-function whistle(f1,f2,d){
-  ensureAudio();const o=audioCtx.createOscillator(),g=audioCtx.createGain();
-  o.type='sine';o.frequency.setValueAtTime(f1,audioCtx.currentTime);
-  o.frequency.linearRampToValueAtTime(f2,audioCtx.currentTime+d);
-  g.gain.setValueAtTime(.25,audioCtx.currentTime);g.gain.exponentialRampToValueAtTime(.001,audioCtx.currentTime+d);
-  o.connect(g);g.connect(audioCtx.destination);o.start();o.stop(audioCtx.currentTime+d);
-}
-function bell(f,d){
-  ensureAudio();const o=audioCtx.createOscillator(),g=audioCtx.createGain();
-  o.type='triangle';o.frequency.value=f;g.gain.setValueAtTime(.35,audioCtx.currentTime);
-  g.gain.exponentialRampToValueAtTime(.001,audioCtx.currentTime+d);
-  o.connect(g);g.connect(audioCtx.destination);o.start();o.stop(audioCtx.currentTime+d);
-}
-function horn(f,d){
-  ensureAudio();const o=audioCtx.createOscillator(),o2=audioCtx.createOscillator(),g=audioCtx.createGain();
-  o.type='sawtooth';o.frequency.value=f;o2.type='square';o2.frequency.value=f*1.01;
-  g.gain.setValueAtTime(.2,audioCtx.currentTime);g.gain.exponentialRampToValueAtTime(.001,audioCtx.currentTime+d);
-  o.connect(g);o2.connect(g);g.connect(audioCtx.destination);o.start();o2.start();o.stop(audioCtx.currentTime+d);o2.stop(audioCtx.currentTime+d);
-}
-
+function tone(f,d,type='sine'){ensureAudio();const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.type=type;o.frequency.value=f;g.gain.setValueAtTime(.3,audioCtx.currentTime);g.gain.exponentialRampToValueAtTime(.001,audioCtx.currentTime+d);o.connect(g);g.connect(audioCtx.destination);o.start();o.stop(audioCtx.currentTime+d)}
+function whistle(f1,f2,d){ensureAudio();const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.type='sine';o.frequency.setValueAtTime(f1,audioCtx.currentTime);o.frequency.linearRampToValueAtTime(f2,audioCtx.currentTime+d);g.gain.setValueAtTime(.25,audioCtx.currentTime);g.gain.exponentialRampToValueAtTime(.001,audioCtx.currentTime+d);o.connect(g);g.connect(audioCtx.destination);o.start();o.stop(audioCtx.currentTime+d)}
+function bell(f,d){ensureAudio();const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.type='triangle';o.frequency.value=f;g.gain.setValueAtTime(.35,audioCtx.currentTime);g.gain.exponentialRampToValueAtTime(.001,audioCtx.currentTime+d);o.connect(g);g.connect(audioCtx.destination);o.start();o.stop(audioCtx.currentTime+d)}
+function horn(f,d){ensureAudio();const o=audioCtx.createOscillator(),o2=audioCtx.createOscillator(),g=audioCtx.createGain();o.type='sawtooth';o.frequency.value=f;o2.type='square';o2.frequency.value=f*1.01;g.gain.setValueAtTime(.2,audioCtx.currentTime);g.gain.exponentialRampToValueAtTime(.001,audioCtx.currentTime+d);o.connect(g);o2.connect(g);g.connect(audioCtx.destination);o.start();o2.start();o.stop(audioCtx.currentTime+d);o2.stop(audioCtx.currentTime+d)}
 function snd(type){const p=SOUND_PACKS[currentPack];if(p&&p[type])p[type]()}
 function vibrate(p){if(navigator.vibrate)navigator.vibrate(p)}
 
 // ===== TTS =====
-function speak(text){
-  if(!document.getElementById('toggle-voice').classList.contains('on'))return;
-  const u=new SpeechSynthesisUtterance(text);u.lang='es-AR';u.rate=1.3;u.volume=1;
-  speechSynthesis.cancel();speechSynthesis.speak(u);
-}
+function speak(text){if(!document.getElementById('toggle-voice').classList.contains('on'))return;const u=new SpeechSynthesisUtterance(text);u.lang='es-AR';u.rate=1.3;u.volume=1;speechSynthesis.cancel();speechSynthesis.speak(u)}
 
 // ===== NAV =====
 function switchPage(p,btn){
@@ -342,34 +364,21 @@ function switchPage(p,btn){
   document.getElementById('page-'+p).classList.add('active');btn.classList.add('active');
 }
 
-// ===== COUNTDOWN 3-2-1 =====
+// ===== COUNTDOWN =====
 function showCountdown(cb){
   const ov=document.getElementById('countdown-overlay'),n=document.getElementById('countdown-number');
   let c=3;ov.classList.add('active');n.textContent=c;snd('countdown');
   const iv=setInterval(()=>{c--;if(c>0){n.textContent=c;n.style.animation='none';n.offsetHeight;n.style.animation='pulseIn .5s ease-out';snd('countdown')}else{clearInterval(iv);ov.classList.remove('active');cb()}},1000);
 }
-
-function flashScreen(color){
-  const o=document.getElementById('flash-overlay');o.style.background=color;
-  o.classList.remove('active');o.offsetHeight;o.classList.add('active');
-  setTimeout(()=>o.classList.remove('active'),400);
-}
-
+function flashScreen(color){const o=document.getElementById('flash-overlay');o.style.background=color;o.classList.remove('active');o.offsetHeight;o.classList.add('active');setTimeout(()=>o.classList.remove('active'),400)}
 function fmtTime(s){return Math.floor(s/60)+':'+String(s%60).padStart(2,'0')}
 
-// ===== CIRCLE TIMER =====
-const CIRC=2*Math.PI*100; // 628.32
-function setCircle(pct,color){
-  const el=document.getElementById('timer-progress');
-  el.style.strokeDashoffset=CIRC*(1-pct);el.style.stroke=color;
-}
+// ===== CIRCLE =====
+const CIRC=2*Math.PI*126;
+function setCircle(pct){const el=document.getElementById('timer-progress');el.style.strokeDasharray=CIRC;el.style.strokeDashoffset=CIRC*(1-pct)}
 
 // ===== SUMMARY =====
-function showSummary(title,stats){
-  document.getElementById('summary-title').textContent=title;
-  document.getElementById('summary-stats').innerHTML=stats.map(s=>`<div class="summary-stat"><label>${s.label}</label><span>${s.value}</span></div>`).join('');
-  document.getElementById('summary-overlay').classList.add('active');
-}
+function showSummary(title,stats){document.getElementById('summary-title').textContent=title;document.getElementById('summary-stats').innerHTML=stats.map(s=>`<div class="summary-stat"><label>${s.label}</label><span>${s.value}</span></div>`).join('');document.getElementById('summary-overlay').classList.add('active')}
 function closeSummary(){document.getElementById('summary-overlay').classList.remove('active')}
 
 // ===== TABATA STATE =====
@@ -378,84 +387,42 @@ const TL={exercises:[1,20],series:[1,10],work:[5,180],rest:[5,120],seriesRest:[1
 let tabataTimer=null,tabataPaused=false,tabataElapsed=0;
 let exerciseNames=[];
 
-function adj(k,d){
-  const[mn,mx]=TL[k];T[k]=Math.max(mn,Math.min(mx,T[k]+d));
-  document.getElementById('v-'+k).textContent=T[k];updateTotalTime();
-  if(k==='exercises')buildExerciseNames();
-}
+function adj(k,d){const[mn,mx]=TL[k];T[k]=Math.max(mn,Math.min(mx,T[k]+d));document.getElementById('v-'+k).textContent=T[k];updateTotalTime();if(k==='exercises')buildExerciseNames()}
+function updateTotalTime(){const t=T.prepare+T.series*(T.exercises*T.work+(T.exercises-1)*T.rest)+(T.series-1)*T.seriesRest;document.getElementById('tabata-total-time').innerHTML=`TIEMPO TOTAL: <strong style="color:var(--text);font-family:'Orbitron',monospace">${fmtTime(t)}</strong>`}
 
-function updateTotalTime(){
-  const t=T.prepare+T.series*(T.exercises*T.work+(T.exercises-1)*T.rest)+(T.series-1)*T.seriesRest;
-  document.getElementById('tabata-total-time').innerHTML=`TIEMPO TOTAL: <strong style="color:var(--text);font-family:'Orbitron',monospace">${fmtTime(t)}</strong>`;
-}
+function buildExerciseNames(){const c=document.getElementById('exercise-names');c.innerHTML='';for(let i=0;i<T.exercises;i++){const old=exerciseNames[i]||'';c.innerHTML+=`<div class="exercise-name-row"><span>${i+1}</span><input type="text" placeholder="Ejercicio ${i+1}" value="${old}" onchange="exerciseNames[${i}]=this.value"></div>`}exerciseNames.length=T.exercises}
+function buildSoundSelector(){const c=document.getElementById('sound-selector');c.innerHTML='';Object.keys(SOUND_PACKS).forEach(k=>{c.innerHTML+=`<div class="sound-chip ${k===currentPack?'active':''}" onclick="selectSound('${k}')">${SOUND_PACKS[k].name}</div>`})}
+function selectSound(k){currentPack=k;buildSoundSelector();snd('work')}
 
-function buildExerciseNames(){
-  const c=document.getElementById('exercise-names');c.innerHTML='';
-  for(let i=0;i<T.exercises;i++){
-    const old=exerciseNames[i]||'';
-    c.innerHTML+=`<div class="exercise-name-row"><span>${i+1}</span><input type="text" placeholder="Ejercicio ${i+1}" value="${old}" onchange="exerciseNames[${i}]=this.value"></div>`;
-  }
-  exerciseNames.length=T.exercises;
-}
-
-// ===== SOUND SELECTOR =====
-function buildSoundSelector(){
-  const c=document.getElementById('sound-selector');c.innerHTML='';
-  Object.keys(SOUND_PACKS).forEach(k=>{
-    c.innerHTML+=`<div class="sound-chip ${k===currentPack?'active':''}" onclick="selectSound('${k}')">${SOUND_PACKS[k].name}</div>`;
-  });
-}
-function selectSound(k){
-  currentPack=k;buildSoundSelector();snd('work');
-}
-
-// ===== PRESETS =====
+// PRESETS
 const DEFAULT_PRESETS=[
   {name:'Tabata Clásico',data:{exercises:8,series:1,work:20,rest:10,seriesRest:60,prepare:10}},
   {name:'HIIT 30/15',data:{exercises:6,series:3,work:30,rest:15,seriesRest:60,prepare:10}},
-  {name:'EMOM',data:{exercises:1,series:10,work:50,rest:10,seriesRest:0,prepare:5}},
+  {name:'EMOM',data:{exercises:1,series:10,work:50,rest:10,seriesRest:10,prepare:5}},
 ];
-
-function getPresets(){
-  try{const s=localStorage.getItem('rf_presets');return s?JSON.parse(s):[];}catch(e){return[]}
-}
-function savePresets(p){try{localStorage.setItem('rf_presets',JSON.stringify(p))}catch(e){}}
-
+function getPresets(){try{const s=localStorage.getItem('trt_presets');return s?JSON.parse(s):[]}catch(e){return[]}}
+function savePresets(p){try{localStorage.setItem('trt_presets',JSON.stringify(p))}catch(e){}}
 function buildPresets(){
-  const row=document.getElementById('presets-row');
-  const custom=getPresets();
-  row.innerHTML='';
-  DEFAULT_PRESETS.forEach((p,i)=>{
-    row.innerHTML+=`<div class="preset-chip ${isActivePreset(p.data)?'active':''}" onclick="loadPreset(${JSON.stringify(p.data).replace(/"/g,'&quot;')})">${p.name}</div>`;
-  });
-  custom.forEach((p,i)=>{
-    row.innerHTML+=`<div class="preset-chip ${isActivePreset(p.data)?'active':''}" onclick="loadPreset(${JSON.stringify(p.data).replace(/"/g,'&quot;')})">${p.name}<span class="del" onclick="event.stopPropagation();deletePreset(${i})">✕</span></div>`;
-  });
+  const row=document.getElementById('presets-row'),custom=getPresets();row.innerHTML='';
+  DEFAULT_PRESETS.forEach(p=>{row.innerHTML+=`<div class="preset-chip ${isActivePreset(p.data)?'active':''}" onclick='loadPreset(${JSON.stringify(p.data)})'>${p.name}</div>`});
+  custom.forEach((p,i)=>{row.innerHTML+=`<div class="preset-chip ${isActivePreset(p.data)?'active':''}" onclick='loadPreset(${JSON.stringify(p.data)})'>${p.name}<span class="del" onclick="event.stopPropagation();deletePreset(${i})">✕</span></div>`});
   row.innerHTML+=`<div class="preset-chip save" onclick="openPresetModal()">+ GUARDAR</div>`;
 }
-
 function isActivePreset(d){return Object.keys(d).every(k=>T[k]===d[k])}
-
-function loadPreset(d){
-  Object.keys(d).forEach(k=>{if(TL[k]){T[k]=d[k];document.getElementById('v-'+k).textContent=T[k]}});
-  updateTotalTime();buildExerciseNames();buildPresets();
-}
-
+function loadPreset(d){Object.keys(d).forEach(k=>{if(TL[k]){T[k]=d[k];document.getElementById('v-'+k).textContent=T[k]}});updateTotalTime();buildExerciseNames();buildPresets()}
 function openPresetModal(){document.getElementById('modal-preset').classList.add('active');document.getElementById('preset-name-input').value='';document.getElementById('preset-name-input').focus()}
 function closePresetModal(){document.getElementById('modal-preset').classList.remove('active')}
-function confirmSavePreset(){
-  const name=document.getElementById('preset-name-input').value.trim();
-  if(!name)return;
-  const presets=getPresets();presets.push({name,data:{...T}});savePresets(presets);
-  closePresetModal();buildPresets();
-}
+function confirmSavePreset(){const name=document.getElementById('preset-name-input').value.trim();if(!name)return;const p=getPresets();p.push({name,data:{...T}});savePresets(p);closePresetModal();buildPresets()}
 function deletePreset(i){const p=getPresets();p.splice(i,1);savePresets(p);buildPresets()}
 
-// ===== TABATA RUN =====
+// ===== TABATA BG COLORS =====
+const BG_COLORS={preparacion:'#c8a800',trabajo:'#cc2020',descanso:'#00a858',descanso_series:'#00a858'};
+
 function startTabataCountdown(){
   ensureAudio();
   document.getElementById('tabata-config').style.display='none';
-  document.getElementById('tabata-display').classList.add('active');
+  const d=document.getElementById('tabata-display');d.classList.add('active');
+  d.style.backgroundColor=BG_COLORS.preparacion;
   updateTabataUI('preparacion',T.prepare,1,T.exercises,1,T.series);
   showCountdown(startTabata);
 }
@@ -465,31 +432,20 @@ function startTabata(){
   document.getElementById('btn-tabata-pause').textContent='PAUSA';
   document.getElementById('btn-tabata-pause').classList.remove('paused');
   let phase='preparacion',ex=1,ser=1,timeLeft=T.prepare;
-  snd('countdown');
-  updateTabataUI(phase,timeLeft,ex,T.exercises,ser,T.series);
+  snd('countdown');updateTabataUI(phase,timeLeft,ex,T.exercises,ser,T.series);
 
   tabataTimer=setInterval(()=>{
     if(tabataPaused)return;
     timeLeft--;tabataElapsed++;
     if(timeLeft<=3&&timeLeft>0)snd('tick');
     if(timeLeft<=0){
-      if(phase==='preparacion'){
-        phase='trabajo';timeLeft=T.work;snd('work');vibrate([200,100,200]);flashScreen('#ff3d3d');
-      }else if(phase==='trabajo'){
-        if(ex>=T.exercises&&ser>=T.series){
-          snd('done');vibrate([300,100,300,100,300]);
-          showSummary('¡TERMINADO!',[{label:'EJERCICIOS',value:T.exercises*T.series},{label:'SERIES',value:T.series},{label:'TIEMPO',value:fmtTime(tabataElapsed)}]);
-          stopTabata();return;
-        }else if(ex>=T.exercises){
-          phase='descanso_series';timeLeft=T.seriesRest;snd('rest');vibrate(200);flashScreen('#00e676');
-        }else{
-          phase='descanso';timeLeft=T.rest;snd('rest');vibrate(200);flashScreen('#00e676');
-        }
-      }else if(phase==='descanso'){
-        ex++;phase='trabajo';timeLeft=T.work;snd('work');vibrate([200,100,200]);flashScreen('#ff3d3d');
-      }else if(phase==='descanso_series'){
-        ser++;ex=1;phase='trabajo';timeLeft=T.work;snd('work');vibrate([200,100,200]);flashScreen('#ff3d3d');
-      }
+      if(phase==='preparacion'){phase='trabajo';timeLeft=T.work;snd('work');vibrate([200,100,200])}
+      else if(phase==='trabajo'){
+        if(ex>=T.exercises&&ser>=T.series){snd('done');vibrate([300,100,300,100,300]);showSummary('¡TERMINADO!',[{label:'EJERCICIOS',value:T.exercises*T.series},{label:'SERIES',value:T.series},{label:'TIEMPO',value:fmtTime(tabataElapsed)}]);stopTabata();return}
+        else if(ex>=T.exercises){phase='descanso_series';timeLeft=T.seriesRest;snd('rest');vibrate(200)}
+        else{phase='descanso';timeLeft=T.rest;snd('rest');vibrate(200)}
+      }else if(phase==='descanso'){ex++;phase='trabajo';timeLeft=T.work;snd('work');vibrate([200,100,200])}
+      else if(phase==='descanso_series'){ser++;ex=1;phase='trabajo';timeLeft=T.work;snd('work');vibrate([200,100,200])}
     }
     updateTabataUI(phase,timeLeft,ex,T.exercises,ser,T.series);
   },1000);
@@ -497,54 +453,28 @@ function startTabata(){
 
 function updateTabataUI(phase,time,ex,totalEx,ser,totalSer){
   const labels={preparacion:'PREPARACIÓN',trabajo:'TRABAJO',descanso:'DESCANSO',descanso_series:'DESC. ENTRE SERIES'};
-  const css={preparacion:'preparacion',trabajo:'trabajo',descanso:'descanso',descanso_series:'descanso'};
-  const cols={preparacion:'var(--yellow)',trabajo:'var(--accent)',descanso:'var(--green)',descanso_series:'var(--green)'};
-  const rawCols={preparacion:'#ffd600',trabajo:'#ff3d3d',descanso:'#00e676',descanso_series:'#00e676'};
-
   document.getElementById('tabata-phase').textContent=labels[phase];
-  document.getElementById('tabata-phase').className='tabata-phase '+css[phase];
   document.getElementById('tabata-time').textContent=time;
-  document.getElementById('tabata-time').style.color=cols[phase];
+  document.getElementById('tabata-display').style.backgroundColor=BG_COLORS[phase];
 
   const eName=(phase==='trabajo'&&exerciseNames[ex-1])?exerciseNames[ex-1]:'';
   document.getElementById('tabata-ex-name').textContent=eName;
-
   document.getElementById('tabata-info').innerHTML=`EJERCICIO <strong>${ex}/${totalEx}</strong> · SERIE <strong>${ser}/${totalSer}</strong>`;
 
   const mx=phase==='preparacion'?T.prepare:phase==='trabajo'?T.work:phase==='descanso'?T.rest:T.seriesRest;
-  const pct=(mx-time)/mx;
-  setCircle(pct,rawCols[phase]);
-
+  setCircle((mx-time)/mx);
   document.getElementById('tabata-elapsed').textContent='TRANSCURRIDO: '+fmtTime(tabataElapsed);
 }
 
-function togglePauseTabata(){
-  tabataPaused=!tabataPaused;
-  const b=document.getElementById('btn-tabata-pause');
-  b.textContent=tabataPaused?'REANUDAR':'PAUSA';b.classList.toggle('paused',tabataPaused);
-}
-function stopTabata(){
-  clearInterval(tabataTimer);tabataTimer=null;tabataPaused=false;
-  document.getElementById('tabata-config').style.display='flex';
-  document.getElementById('tabata-display').classList.remove('active');
-}
+function togglePauseTabata(){tabataPaused=!tabataPaused;const b=document.getElementById('btn-tabata-pause');b.textContent=tabataPaused?'REANUDAR':'PAUSA';b.classList.toggle('paused',tabataPaused)}
+function stopTabata(){clearInterval(tabataTimer);tabataTimer=null;tabataPaused=false;document.getElementById('tabata-config').style.display='flex';document.getElementById('tabata-display').classList.remove('active')}
 
 // ===== REACTION =====
-const COLORS=[
-  {name:'ROJO',hex:'#ff3d3d'},{name:'AZUL',hex:'#3d7eff'},{name:'VERDE',hex:'#00e676'},
-  {name:'AMARILLO',hex:'#ffd600'},{name:'NARANJA',hex:'#ff9100'},{name:'VIOLETA',hex:'#b040ff'},
-  {name:'CELESTE',hex:'#00e5ff'},{name:'ROSA',hex:'#ff4081'},{name:'BLANCO',hex:'#f0f0f5'},
-];
+const COLORS=[{name:'ROJO',hex:'#ff3d3d'},{name:'AZUL',hex:'#3d7eff'},{name:'VERDE',hex:'#00e676'},{name:'AMARILLO',hex:'#ffd600'},{name:'NARANJA',hex:'#ff9100'},{name:'VIOLETA',hex:'#b040ff'},{name:'CELESTE',hex:'#00e5ff'},{name:'ROSA',hex:'#ff4081'},{name:'BLANCO',hex:'#f0f0f5'}];
 let selectedColors=[0,1,2,3],reactionTimers=[],reactionPaused=false,reactionDuration=3,rSoundOn=true;
 
-function buildColorGrid(){
-  const g=document.getElementById('color-grid');g.innerHTML='';
-  COLORS.forEach((c,i)=>{const d=document.createElement('div');d.className='color-chip'+(selectedColors.includes(i)?' selected':'');d.style.background=c.hex;d.onclick=()=>toggleColor(i);g.appendChild(d)});
-}
-function toggleColor(i){
-  if(selectedColors.includes(i)){if(selectedColors.length<=2)return;selectedColors=selectedColors.filter(x=>x!==i)}
-  else selectedColors.push(i);buildColorGrid();
-}
+function buildColorGrid(){const g=document.getElementById('color-grid');g.innerHTML='';COLORS.forEach((c,i)=>{const d=document.createElement('div');d.className='color-chip'+(selectedColors.includes(i)?' selected':'');d.style.background=c.hex;d.onclick=()=>toggleColor(i);g.appendChild(d)})}
+function toggleColor(i){if(selectedColors.includes(i)){if(selectedColors.length<=2)return;selectedColors=selectedColors.filter(x=>x!==i)}else selectedColors.push(i);buildColorGrid()}
 function adjR(k,d){if(k==='duration'){reactionDuration=Math.max(1,Math.min(30,reactionDuration+d));document.getElementById('v-duration').textContent=reactionDuration}}
 function updateIntervalLabel(){document.getElementById('interval-val').textContent=document.getElementById('interval-range').value+'s'}
 function toggleRSound(){rSoundOn=!rSoundOn;const b=document.getElementById('r-sound-btn');b.textContent=rSoundOn?'🔊':'🔇';b.classList.toggle('off',!rSoundOn)}
@@ -557,17 +487,13 @@ function startReactionCountdown(){
   document.getElementById('r-changes').textContent='0';document.getElementById('r-time').textContent=fmtTime(reactionDuration*60);
   showCountdown(startReaction);
 }
-
 function startReaction(){
-  reactionPaused=false;
-  document.getElementById('btn-reaction-pause').textContent='PAUSA';
-  document.getElementById('btn-reaction-pause').classList.remove('paused');
+  reactionPaused=false;document.getElementById('btn-reaction-pause').textContent='PAUSA';document.getElementById('btn-reaction-pause').classList.remove('paused');
   const baseInt=parseFloat(document.getElementById('interval-range').value)*1000;
   const useRandom=document.getElementById('toggle-random').classList.contains('on');
   const useVib=document.getElementById('toggle-vibration').classList.contains('on');
   let totalTime=reactionDuration*60,changes=0,lastIdx=-1;
   const display=document.getElementById('reaction-display');
-
   function getInt(){if(!useRandom)return baseInt;return Math.max(500,baseInt*.4)+Math.random()*(baseInt*1.8-Math.max(500,baseInt*.4))}
   function next(){
     if(reactionPaused){reactionTimers.push(setTimeout(next,500));return}
@@ -578,27 +504,13 @@ function startReaction(){
     if(rSoundOn)snd('color');if(useVib)vibrate(150);speak(c.name);
     reactionTimers.push(setTimeout(next,getInt()));
   }
-  const timerIv=setInterval(()=>{
-    if(reactionPaused)return;totalTime--;
-    document.getElementById('r-time').textContent=fmtTime(totalTime);
-    if(totalTime<=0){snd('done');vibrate([300,100,300,100,300]);
-      showSummary('¡ENTRENAMIENTO COMPLETO!',[{label:'CAMBIOS',value:changes},{label:'DURACIÓN',value:fmtTime(reactionDuration*60)},{label:'COLORES',value:selectedColors.length}]);
-      stopReaction();}
+  const timerIv=setInterval(()=>{if(reactionPaused)return;totalTime--;document.getElementById('r-time').textContent=fmtTime(totalTime);
+    if(totalTime<=0){snd('done');vibrate([300,100,300,100,300]);showSummary('¡ENTRENAMIENTO COMPLETO!',[{label:'CAMBIOS',value:changes},{label:'DURACIÓN',value:fmtTime(reactionDuration*60)},{label:'COLORES',value:selectedColors.length}]);stopReaction()}
   },1000);
   reactionTimers.push(timerIv);next();
 }
-
-function togglePauseReaction(){
-  reactionPaused=!reactionPaused;const b=document.getElementById('btn-reaction-pause');
-  b.textContent=reactionPaused?'REANUDAR':'PAUSA';b.classList.toggle('paused',reactionPaused);
-  if(reactionPaused){document.getElementById('reaction-content').innerHTML='<div class="reaction-waiting">PAUSADO</div>';document.getElementById('reaction-display').style.backgroundColor='#1a1a26'}
-}
-function stopReaction(){
-  reactionTimers.forEach(t=>{clearTimeout(t);clearInterval(t)});reactionTimers=[];
-  reactionPaused=false;speechSynthesis.cancel();
-  document.getElementById('reaction-config').style.display='flex';
-  const d=document.getElementById('reaction-display');d.classList.remove('active');d.style.backgroundColor='';
-}
+function togglePauseReaction(){reactionPaused=!reactionPaused;const b=document.getElementById('btn-reaction-pause');b.textContent=reactionPaused?'REANUDAR':'PAUSA';b.classList.toggle('paused',reactionPaused);if(reactionPaused){document.getElementById('reaction-content').innerHTML='<div class="reaction-waiting">PAUSADO</div>';document.getElementById('reaction-display').style.backgroundColor='#1a1a26'}}
+function stopReaction(){reactionTimers.forEach(t=>{clearTimeout(t);clearInterval(t)});reactionTimers=[];reactionPaused=false;speechSynthesis.cancel();document.getElementById('reaction-config').style.display='flex';const d=document.getElementById('reaction-display');d.classList.remove('active');d.style.backgroundColor=''}
 
 // ===== INIT =====
 buildColorGrid();buildExerciseNames();buildSoundSelector();buildPresets();updateTotalTime();

@@ -1,8 +1,8 @@
- {
+{
   "id": "./",
-  "name": "ReactionFit - Tabata & Reaction Training",
-  "short_name": "ReactionFit",
-  "description": "Tabata timer y entrenamiento de reacción con conos de colores",
+  "name": "TRT - Tabata Reaction Training",
+  "short_name": "TRT",
+  "description": "Timer Tabata configurable y entrenamiento de reacción con conos de colores. HIIT training app.",
 
   "start_url": "./",
   "scope": "./",
@@ -41,14 +41,20 @@
       "name": "Iniciar Tabata",
       "short_name": "Tabata",
       "url": "./"
+    },
+    {
+      "name": "Entrenamiento Reacción",
+      "short_name": "Reacción",
+      "url": "./"
     }
   ],
+
   "screenshots": [
-  {
-    "src": "screenshots/home.png",
-    "sizes": "1920x1080",
-    "type": "image/png",
-    "form_factor": "narrow"
-  }
-]
+    {
+      "src": "screenshots/home.png",
+      "sizes": "1920x1080",
+      "type": "image/png",
+      "form_factor": "narrow"
+    }
+  ]
 }
