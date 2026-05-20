@@ -67,9 +67,12 @@ body{display:flex;flex-direction:column}
 .preset-chip.active{border-color:var(--accent);color:var(--accent);background:rgba(255,61,61,.08)}
 .preset-chip.save{border-style:dashed;border-color:var(--green);color:var(--green)}
 .preset-chip .del{margin-left:6px;opacity:.5;font-size:11px}
-.sound-selector{display:flex;gap:8px;flex-wrap:wrap;padding:4px 0}
-.sound-chip{padding:8px 14px;border-radius:20px;border:1.5px solid var(--surface-2);background:var(--surface);color:var(--text-dim);font-size:18px;font-weight:700;cursor:pointer;transition:all .2s}
-.sound-chip.active{border-color:var(--accent);color:var(--accent);background:rgba(255,61,61,.08)}
+.sound-selector{display:flex;gap:8px;align-items:center;padding:4px 0}
+.sound-dropdown{flex:1;background:var(--surface);border:1.5px solid var(--surface-2);border-radius:12px;color:var(--text);font-family:'Rajdhani',sans-serif;font-size:18px;font-weight:700;padding:10px 14px;outline:none;cursor:pointer;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238888a0' stroke-width='2' fill='none'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center}
+.sound-dropdown:focus{border-color:var(--accent)}
+.sound-dropdown option{background:var(--surface);color:var(--text)}
+.sound-preview-btn{width:40px;height:40px;border-radius:50%;border:1.5px solid var(--accent);background:transparent;color:var(--accent);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.sound-preview-btn:active{background:var(--accent);color:#fff}
 
 /* ===== TABATA DISPLAY - FULLSCREEN COLORED ===== */
 .tabata-display{position:fixed;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;gap:2px;text-align:center;z-index:90;transition:background-color .35s}
@@ -202,7 +205,10 @@ body{display:flex;flex-direction:column}
     <div class="section-title">🏋️ NOMBRES (opcional)</div>
     <div class="exercise-names" id="exercise-names"></div>
     <div class="section-title">🔊 SONIDO</div>
-    <div class="sound-selector" id="sound-selector"></div>
+    <div class="sound-selector">
+      <select class="sound-dropdown" id="sound-dropdown" onchange="selectSound(this.value)"></select>
+      <button class="sound-preview-btn" onclick="snd('work')" title="Probar sonido">▶</button>
+    </div>
     <div class="tabata-elapsed" id="tabata-total-time" style="text-align:center;padding:8px 0;font-size:50px;color:var(--text-dim)"></div>
     <button class="btn-main btn-start" onclick="startTabataCountdown()">COMENZAR</button>
   </div>
@@ -263,7 +269,7 @@ body{display:flex;flex-direction:column}
         <li>Nombres personalizados por ejercicio</li>
         <li>Descanso entre series independiente</li>
         <li>Timer circular con fondo de color por fase</li>
-        <li>Presets guardables (Tabata clásico, HIIT, EMOM)</li>
+        <li>Presets guardables</li>
         <li>4 packs de sonido: Beep, Silbato, Campana, Bocina</li>
         <li>Pausa/reanudar en todo momento</li>
         <li>Cuenta regresiva 3-2-1</li>
@@ -344,7 +350,11 @@ const SOUND_PACKS={
   beep:{name:'Beep',work:()=>{tone(880,.15);setTimeout(()=>tone(880,.15),180)},rest:()=>tone(440,.3),tick:()=>tone(660,.08),done:()=>{tone(1200,.12);setTimeout(()=>{tone(1400,.12);setTimeout(()=>tone(1600,.3),140)},140)},countdown:()=>tone(700,.12),color:()=>tone(600,.1,'square')},
   silbato:{name:'Silbato',work:()=>whistle(1200,1800,.35),rest:()=>whistle(800,600,.25),tick:()=>tone(660,.08),done:()=>{whistle(1200,1800,.2);setTimeout(()=>whistle(1200,1800,.2),300);setTimeout(()=>whistle(1200,1800,.4),600)},countdown:()=>tone(700,.12),color:()=>whistle(900,1200,.12)},
   campana:{name:'Campana',work:()=>bell(800,.5),rest:()=>bell(500,.4),tick:()=>tone(660,.08),done:()=>{bell(800,.3);setTimeout(()=>bell(1000,.3),250);setTimeout(()=>bell(1200,.5),500)},countdown:()=>bell(600,.15),color:()=>bell(700,.15)},
-  bocina:{name:'Bocina',work:()=>horn(200,.4),rest:()=>horn(150,.3),tick:()=>tone(660,.08),done:()=>{horn(200,.2);setTimeout(()=>horn(250,.2),250);setTimeout(()=>horn(300,.4),500)},countdown:()=>horn(180,.12),color:()=>horn(250,.1)}
+  bocina:{name:'Bocina',work:()=>horn(200,.4),rest:()=>horn(150,.3),tick:()=>tone(660,.08),done:()=>{horn(200,.2);setTimeout(()=>horn(250,.2),250);setTimeout(()=>horn(300,.4),500)},countdown:()=>horn(180,.12),color:()=>horn(250,.1)},
+  alarma:{name:'Alarma',work:()=>{tone(1000,.1);setTimeout(()=>tone(800,.1),120);setTimeout(()=>tone(1000,.1),240)},rest:()=>{tone(500,.15);setTimeout(()=>tone(400,.15),170)},tick:()=>tone(900,.06),done:()=>{for(let i=0;i<5;i++)setTimeout(()=>tone(1200,.08),i*100)},countdown:()=>tone(600,.1),color:()=>tone(1000,.08)},
+  laser:{name:'Láser',work:()=>whistle(2000,200,.25),rest:()=>whistle(600,300,.2),tick:()=>whistle(1500,800,.06),done:()=>{whistle(2000,200,.15);setTimeout(()=>whistle(2200,200,.15),200);setTimeout(()=>whistle(2400,100,.3),400)},countdown:()=>whistle(1200,600,.1),color:()=>whistle(1800,400,.1)},
+  militar:{name:'Militar',work:()=>{tone(600,.08,'square');setTimeout(()=>tone(600,.08,'square'),100);setTimeout(()=>tone(800,.15,'square'),200)},rest:()=>tone(400,.2,'square'),tick:()=>tone(500,.05,'square'),done:()=>{for(let i=0;i<3;i++)setTimeout(()=>{tone(600,.08,'square');setTimeout(()=>tone(800,.12,'square'),100)},i*250)},countdown:()=>tone(500,.08,'square'),color:()=>tone(700,.06,'square')},
+  arcade:{name:'Arcade',work:()=>{whistle(400,1200,.12);setTimeout(()=>whistle(600,1400,.12),150)},rest:()=>whistle(1200,400,.2),tick:()=>whistle(800,1000,.05),done:()=>{const n=[523,659,784,1047];n.forEach((f,i)=>setTimeout(()=>tone(f,.15),i*120))},countdown:()=>whistle(500,900,.1),color:()=>whistle(600,1000,.08)}
 };
 let currentPack='beep';
 function tone(f,d,type='sine'){ensureAudio();const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.type=type;o.frequency.value=f;g.gain.setValueAtTime(.3,audioCtx.currentTime);g.gain.exponentialRampToValueAtTime(.001,audioCtx.currentTime+d);o.connect(g);g.connect(audioCtx.destination);o.start();o.stop(audioCtx.currentTime+d)}
@@ -391,20 +401,15 @@ function adj(k,d){const[mn,mx]=TL[k];T[k]=Math.max(mn,Math.min(mx,T[k]+d));docum
 function updateTotalTime(){const t=T.prepare+T.series*(T.exercises*T.work+(T.exercises-1)*T.rest)+(T.series-1)*T.seriesRest;document.getElementById('tabata-total-time').innerHTML=`TIEMPO TOTAL: <strong style="color:var(--text);font-family:'Orbitron',monospace">${fmtTime(t)}</strong>`}
 
 function buildExerciseNames(){const c=document.getElementById('exercise-names');c.innerHTML='';for(let i=0;i<T.exercises;i++){const old=exerciseNames[i]||'';c.innerHTML+=`<div class="exercise-name-row"><span>${i+1}</span><input type="text" placeholder="Ejercicio ${i+1}" value="${old}" onchange="exerciseNames[${i}]=this.value"></div>`}exerciseNames.length=T.exercises}
-function buildSoundSelector(){const c=document.getElementById('sound-selector');c.innerHTML='';Object.keys(SOUND_PACKS).forEach(k=>{c.innerHTML+=`<div class="sound-chip ${k===currentPack?'active':''}" onclick="selectSound('${k}')">${SOUND_PACKS[k].name}</div>`})}
-function selectSound(k){currentPack=k;buildSoundSelector();snd('work')}
+function buildSoundSelector(){const s=document.getElementById('sound-dropdown');s.innerHTML='';Object.keys(SOUND_PACKS).forEach(k=>{const o=document.createElement('option');o.value=k;o.textContent=SOUND_PACKS[k].name;if(k===currentPack)o.selected=true;s.appendChild(o)})}
+function selectSound(k){currentPack=k;ensureAudio();snd('work')}
 
 // PRESETS
-const DEFAULT_PRESETS=[
-  {name:'Tabata Clásico',data:{exercises:8,series:1,work:20,rest:10,seriesRest:60,prepare:10}},
-  {name:'HIIT 30/15',data:{exercises:6,series:3,work:30,rest:15,seriesRest:60,prepare:10}},
-  {name:'EMOM',data:{exercises:1,series:10,work:50,rest:10,seriesRest:10,prepare:5}},
-];
 function getPresets(){try{const s=localStorage.getItem('trt_presets');return s?JSON.parse(s):[]}catch(e){return[]}}
 function savePresets(p){try{localStorage.setItem('trt_presets',JSON.stringify(p))}catch(e){}}
 function buildPresets(){
   const row=document.getElementById('presets-row'),custom=getPresets();row.innerHTML='';
-  DEFAULT_PRESETS.forEach(p=>{row.innerHTML+=`<div class="preset-chip ${isActivePreset(p.data)?'active':''}" onclick='loadPreset(${JSON.stringify(p.data)})'>${p.name}</div>`});
+  if(custom.length===0){row.innerHTML='<div style="font-size:14px;color:var(--text-dim);padding:4px 0;font-style:italic">Sin presets — guardá tu configuración</div>'}
   custom.forEach((p,i)=>{row.innerHTML+=`<div class="preset-chip ${isActivePreset(p.data)?'active':''}" onclick='loadPreset(${JSON.stringify(p.data)})'>${p.name}<span class="del" onclick="event.stopPropagation();deletePreset(${i})">✕</span></div>`});
   row.innerHTML+=`<div class="preset-chip save" onclick="openPresetModal()">+ GUARDAR</div>`;
 }
